@@ -1,7 +1,6 @@
 require "thread"
 
 require "nio"
-require "byebug" rescue nil
 
 require "reactomatic/version"
 require "reactomatic/exceptions"
