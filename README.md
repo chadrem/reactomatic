@@ -1,8 +1,9 @@
 # Reactomatic
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/reactomatic`. To experiment with that code, run `bin/console` for an interactive prompt.
+Reactomatic is an implementation of the [Reactor Pattern](https://en.wikipedia.org/wiki/Reactor_pattern) for Ruby.
+It's built on top of the excellent [nio4r](https://github.com/celluloid/nio4r) gem.
 
-TODO: Delete this and the text above, and describe your gem
+Note that it's similar in purpose to the popular [EventMachine](https://github.com/eventmachine/eventmachine/) gem, but without many of it's extra features.
 
 ## Installation
 
@@ -20,15 +21,63 @@ Or install it yourself as:
 
     $ gem install reactomatic
 
-## Usage
 
-TODO: Write usage instructions here
+## Reactors
 
-## Development
+The ````Reactor```` class is the heart of Reactomatic.
+Reactors handle all the low level details of running an event loop in a dedicated thread.
+This means you get to focus on writing application logic instead of low level socket code.
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Reactomatic creates a default reactor that should be sufficient for most applications (you can also create custom ones):
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+    ````Reactomatic.reactor````
+    
+Commonly used methods are:
+
+- ````stop````: Stop the reactor and its dedicated thread.
+- ````start````: Start the reactor and its dedicated thread.
+- ````next_tick````: Runs a block of code on the reactor's thread in the future (next time it loops).
+- ````schedule````: Runs a block of code on the reactor's thread immediately if called from the reactor thread or schedules it to run in the future with ````next_tick````.
+
+## TCP Servers
+
+The ````TcpServer```` class lets you easily listen for new connections.
+
+    server = TcpServer.new
+    server.listen('0.0.0.0', 9000, Reactomatic::TcpConnection)
+
+The above code will listen for new connections on ````0.0.0.0:9000````.
+When it receives one, it will create an instance of ````Reactomatic::TcpConnection```` to process data associated with the connection.  Below you will learn how to create your own custom connection class to override the default behavior.
+
+## TCP Connections
+
+The ````TcpConnection```` class is designed to be subclassed and customized for your needs.  Here's an example:
+
+    class MyConnection < Reactomatic::TcpConnection
+    private
+    def on_initialize
+      puts "MyConnection: initialized!"
+    end
+
+    def on_receive_data(data)
+      puts "MyConnection: received #{data.bytesize} bytes of data and echoing back!"
+      send_data(data)
+    end
+
+    def on_sent_data(num_bytes)
+      puts "MyConnection: sent #{num_bytes} of data!"
+    end
+
+    def on_disconnect
+      puts "MyConnection: disconnected! read bytes: #{@read_count}, wrote bytes: #{@write_count}"
+    end
+    end
+
+The connection class has some built in methods:
+
+- ````reactor````: Returns a reference to this connections reactor.
+- ````send_data(data)````: Queues data for sending.  If it can't be sent immediately, the data will be buffered and sent in the future.
+- ````close````: Immediately closes the connection.
 
 ## Contributing
 
