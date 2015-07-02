@@ -2,8 +2,7 @@
 
 Reactomatic is an implementation of the [Reactor Pattern](https://en.wikipedia.org/wiki/Reactor_pattern) for Ruby.
 It's built on top of the excellent [nio4r](https://github.com/celluloid/nio4r) gem.
-
-Note that it's similar in purpose to the popular [EventMachine](https://github.com/eventmachine/eventmachine/) gem, but without many of it's extra features.
+It's similar in purpose to the popular [EventMachine](https://github.com/eventmachine/eventmachine/) gem, but without many of it's extra features.
 
 ## Installation
 
