@@ -34,7 +34,7 @@ Reactomatic creates a default reactor that should be sufficient for most applica
     
 *Instance methods:*
 
-- ````stop````: Stop the reactor and its dedicated thread.
+- ````stop````: Stop the reactor and its dedicated thread.  This doesn't close any open connections or running servers.
 - ````start````: Start the reactor and its dedicated thread.
 - ````next_tick````: Runs a block of code on the reactor's thread in the future (next time it loops).
 - ````schedule````: Runs a block of code on the reactor's thread immediately if called from the reactor thread or schedules it to run in the future with ````next_tick````.
@@ -42,12 +42,18 @@ Reactomatic creates a default reactor that should be sufficient for most applica
 ## TCP Servers
 
 The ````TcpServer```` class lets you easily listen for new connections.
+Here is an example:
 
     server = TcpServer.new
     server.listen('0.0.0.0', 9000, Reactomatic::TcpConnection)
 
 The above code will listen for new connections on ````0.0.0.0:9000````.
 When it receives one, it will create an instance of ````Reactomatic::TcpConnection```` to process data associated with the connection.  Below you will learn how to create your own custom connection class to override the default behavior.
+
+*Instance methods:*
+
+- ````listen(host, port, klass)````: Listen for incoming connections.
+- ````close````: Stop listening for incoming connections.  Already established connections will remain open.
 
 ## TCP Connections
 
