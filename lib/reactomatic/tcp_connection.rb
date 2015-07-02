@@ -24,6 +24,7 @@ module Reactomatic
     end
 
     def connect(host, port)
+      raise 'Not implemented yet.'
     end
 
     def send_data(data)
