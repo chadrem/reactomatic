@@ -87,7 +87,7 @@ Here's an example:
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/reactomatic.
+Bug reports and pull requests are welcome on GitHub at https://github.com/chadrem/reactomatic.
 
 
 ## License
