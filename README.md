@@ -41,7 +41,7 @@ Reactomatic creates a default reactor that should be sufficient for most applica
 
 ## TCP Servers
 
-The ````TcpServer```` class lets you easily listen for new connections.
+The ````TcpServer```` class lets you easily listen for new connections and pass them off to a connection class.
 Here is an example:
 
     server = TcpServer.new
@@ -57,7 +57,9 @@ When it receives one, it will create an instance of ````Reactomatic::TcpConnecti
 
 ## TCP Connections
 
-The ````TcpConnection```` class is designed to be subclassed and customized for your needs.  Here's an example:
+The ````TcpConnection```` base class is how you interface your application logic with sending and receiving data.
+It's designed so that your custom connection classes inherit from it and override event handlers.
+Here's an example:
 
     class MyConnection < Reactomatic::TcpConnection
     private
@@ -75,7 +77,7 @@ The ````TcpConnection```` class is designed to be subclassed and customized for 
     end
 
     def on_disconnect
-      puts "MyConnection: disconnected! read bytes: #{@read_count}, wrote bytes: #{@write_count}"
+      puts "MyConnection: disconnected!"
     end
     end
 
