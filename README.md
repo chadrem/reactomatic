@@ -60,23 +60,23 @@ It's designed so that your custom connection classes inherit from it and overrid
 Here's an example:
 
     class MyConnection < Reactomatic::TcpConnection
-    private
-    def on_initialize
-      puts "MyConnection: initialized!"
-    end
+      private
+      def on_initialize
+        puts "MyConnection: initialized!"
+      end
+      
+      def on_receive_data(data)
+        puts "MyConnection: received #{data.bytesize} bytes of data and echoing back!"
+        send_data(data)
+      end
 
-    def on_receive_data(data)
-      puts "MyConnection: received #{data.bytesize} bytes of data and echoing back!"
-      send_data(data)
-    end
-
-    def on_sent_data(num_bytes)
-      puts "MyConnection: sent #{num_bytes} of data!"
-    end
-
-    def on_disconnect
-      puts "MyConnection: disconnected!"
-    end
+      def on_sent_data(num_bytes)
+        puts "MyConnection: sent #{num_bytes} of data!"
+      end
+      
+      def on_disconnect
+        puts "MyConnection: disconnected!"
+      end
     end
 
 *Instance methods:*
