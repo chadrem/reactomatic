@@ -29,6 +29,7 @@ module Reactomatic
     def send_data(data)
       @lock.synchronize do
         @write_buffer.append(data)
+        write_nonblock
         register
       end
 
@@ -98,28 +99,32 @@ module Reactomatic
 
     def selected(monitor)
       @lock.synchronize do
-        if monitor.readable?
-          begin
-            data = @socket.read_nonblock(1024**2)
-            on_receive_data(data)
-            @read_count += data.bytesize
-          rescue EOFError
-            @read_eof = true
-          rescue IO::WaitReadable
-          end
-        end
-
-        if monitor.writable? && !@write_buffer.empty?
-          begin
-            num_bytes = @socket.write_nonblock(@write_buffer.read)
-            @write_buffer.consume(num_bytes)
-            @write_count += num_bytes
-            on_sent_data(num_bytes)
-          rescue IO::WaitWritable
-          end
-        end
-
+        read_nonblock if monitor.readable?
+        write_nonblock if monitor.writable?
         register
+      end
+    end
+
+    def read_nonblock
+      begin
+        data = @socket.read_nonblock(1024**2)
+        on_receive_data(data)
+        @read_count += data.bytesize
+      rescue EOFError
+        @read_eof = true
+      rescue IO::WaitReadable
+      end
+    end
+
+    def write_nonblock
+      return if @write_buffer.empty?
+
+      begin
+        num_bytes = @socket.write_nonblock(@write_buffer.read)
+        @write_buffer.consume(num_bytes)
+        @write_count += num_bytes
+        on_sent_data(num_bytes)
+      rescue IO::WaitWritable
       end
     end
   end
