@@ -7,9 +7,7 @@ It's built on top of the excellent [nio4r](https://github.com/celluloid/nio4r) g
 
 Add this line to your application's Gemfile:
 
-```ruby
-gem 'reactomatic'
-```
+    gem 'reactomatic'
 
 And then execute:
 
