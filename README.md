@@ -32,8 +32,8 @@ Reactomatic creates a default reactor that should be sufficient for most applica
 
 - ````stop````: Stop the reactor and its dedicated thread.  This doesn't close any open connections or running servers.
 - ````start````: Start the reactor and its dedicated thread.
-- ````next_tick````: Runs a block of code on the reactor's thread in the future (next time it loops).
-- ````schedule````: Runs a block of code on the reactor's thread immediately if called from the reactor thread or schedules it to run in the future with ````next_tick````.
+- ````next_tick````: Run a block of code on the reactor's thread in the future (next time it loops).
+- ````schedule````: Run a block of code on the reactor's thread immediately if called from the reactor thread.  If called from a differet thread, the block will run in the future using ````next_tick````.
 
 ## TCP Servers
 
