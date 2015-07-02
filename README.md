@@ -30,9 +30,9 @@ This means you get to focus on writing application logic instead of low level so
 
 Reactomatic creates a default reactor that should be sufficient for most applications (you can also create custom ones):
 
-    ````Reactomatic.reactor````
+    Reactomatic.reactor
     
-Commonly used methods are:
+*Instance methods:*
 
 - ````stop````: Stop the reactor and its dedicated thread.
 - ````start````: Start the reactor and its dedicated thread.
@@ -73,7 +73,7 @@ The ````TcpConnection```` class is designed to be subclassed and customized for 
     end
     end
 
-The connection class has some built in methods:
+*Instance methods:*
 
 - ````reactor````: Returns a reference to this connections reactor.
 - ````send_data(data)````: Queues data for sending.  If it can't be sent immediately, the data will be buffered and sent in the future.
