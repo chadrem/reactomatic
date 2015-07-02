@@ -15,7 +15,7 @@ module Reactomatic
       @klass = klass
 
       @socket = TCPServer.new(@host, @port)
-      @reactor.register(@socket, :r, method(:__selected__))
+      @reactor.register(@socket, :r, method(:selected))
 
       nil
     end
@@ -36,7 +36,7 @@ module Reactomatic
     # Internal methods (don't use).
     #
 
-    def __selected__(monitor)
+    def selected(monitor)
       if monitor.closed?
         @reactor.deregister(@server)
         return
