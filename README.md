@@ -42,7 +42,7 @@ Reactomatic creates a default reactor that should be sufficient for most applica
 The ````TcpServer```` class lets you easily listen for new connections and pass them off to a connection class.
 Here is an example:
 
-    server = TcpServer.new
+    server = Reactomatic::TcpServer.new
     server.listen('0.0.0.0', 9000, Reactomatic::TcpConnection)
 
 The above code will listen for new connections on ````0.0.0.0:9000````.
