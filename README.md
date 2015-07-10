@@ -1,4 +1,4 @@
-# Reactomatic
+# Reactomatic [![Build Status](https://travis-ci.org/chadrem/reactomatic.svg)](https://travis-ci.org/chadrem/reactomatic) [![Coverage Status](https://coveralls.io/repos/chadrem/reactomatic/badge.svg?branch=master&service=github)](https://coveralls.io/github/chadrem/reactomatic?branch=master)
 
 Reactomatic is an implementation of the [Reactor Pattern](https://en.wikipedia.org/wiki/Reactor_pattern) for Ruby.
 It's built on top of the excellent [nio4r](https://github.com/celluloid/nio4r) gem.
@@ -27,7 +27,7 @@ This means you get to focus on writing application logic instead of low level so
 Reactomatic creates a default reactor that should be sufficient for most applications (you can also create custom ones):
 
     Reactomatic.reactor
-    
+
 *Instance methods:*
 
 - ````stop````: Stop the reactor and its dedicated thread.  This doesn't close any open connections or running servers.
@@ -62,7 +62,7 @@ Here's an example:
       def on_initialize
         puts "MyConnection: initialized!"
       end
-      
+
       def on_receive_data(data)
         puts "MyConnection: received #{data.bytesize} bytes of data and echoing back!"
         send_data(data)
@@ -71,7 +71,7 @@ Here's an example:
       def on_sent_data(num_bytes)
         puts "MyConnection: sent #{num_bytes} of data!"
       end
-      
+
       def on_disconnect
         puts "MyConnection: disconnected!"
       end

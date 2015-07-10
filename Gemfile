@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in reactomatic.gemspec
+gem 'coveralls', :require => false
+
 gemspec
 
 platforms :ruby do
