@@ -118,7 +118,7 @@ module Reactomatic
     end
 
     def write_nonblock
-      return if @write_buffer.empty?
+      return if @write_buffer.empty? || @socket.nil?
 
       begin
         num_bytes = @socket.write_nonblock(@write_buffer.read)
