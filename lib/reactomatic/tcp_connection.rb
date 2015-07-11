@@ -29,6 +29,8 @@ module Reactomatic
 
     def send_data(data)
       @lock.synchronize do
+        return nil if @socket.nil?
+
         @write_buffer.append(data)
         write_nonblock
         register
@@ -118,7 +120,7 @@ module Reactomatic
     end
 
     def write_nonblock
-      return if @write_buffer.empty? || @socket.nil?
+      return if @write_buffer.empty?
 
       begin
         num_bytes = @socket.write_nonblock(@write_buffer.read)
