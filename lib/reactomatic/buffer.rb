@@ -5,7 +5,6 @@ module Reactomatic
     def initialize(opts = {})
       @max_length = opts[:max_length]
       @opts = opts
-      @lock = Mutex.new
       @buffer = ""
     end
 
@@ -40,6 +39,12 @@ module Reactomatic
 
     def any?
       return !empty?
+    end
+
+    def clear
+      @buffer = ""
+
+      nil
     end
   end
 end

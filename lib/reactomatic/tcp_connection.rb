@@ -8,7 +8,8 @@ module Reactomatic
       @write_buffer = opts[:write_buffer] || Buffer.new
       @read_count = 0
       @write_count = 0
-      @eof = false
+      @read_finished = false
+      @write_finished = false
       @lock = Monitor.new
 
       on_initialize
@@ -86,18 +87,21 @@ module Reactomatic
     def register
       @reactor.deregister(@socket)
 
-      interest = nil
+      read_interest = !@read_finished
+      write_interest = !@write_finished && @write_buffer.any?
 
-      if @eof && @write_buffer.any?
-        interest = :w
-      elsif !@eof && @write_buffer.any?
-        interest = :rw
-      elsif !@eof && @write_buffer.empty?
-        interest = :r
+      if read_interest && write_interest
+        interests = :rw
+      elsif read_interest
+        interests = :r
+      elsif write_interest
+        interests = :w
+      else
+        interests = nil
       end
 
-      if interest
-        @reactor.register(@socket, interest, method(:selected))
+      if interests
+        @reactor.register(@socket, interests, method(:selected))
       else
         close
       end
@@ -121,7 +125,7 @@ module Reactomatic
       rescue IO::WaitReadable
         return
       rescue Exception
-        @eof = true
+        @read_finished = true
         return
       end
 
@@ -134,11 +138,16 @@ module Reactomatic
 
       begin
         num_bytes = @socket.write_nonblock(@write_buffer.read)
-        @write_buffer.consume(num_bytes)
-        @write_count += num_bytes
-        on_sent_data(num_bytes)
       rescue IO::WaitWritable
+        return
+      rescue Exception
+        @write_finished = true
+        return
       end
+
+      @write_buffer.consume(num_bytes)
+      @write_count += num_bytes
+      on_sent_data(num_bytes)
     end
   end
 end
