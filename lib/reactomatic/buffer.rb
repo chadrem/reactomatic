@@ -37,5 +37,9 @@ module Reactomatic
     def empty?
       return @buffer.empty?
     end
+
+    def any?
+      return !empty?
+    end
   end
 end
