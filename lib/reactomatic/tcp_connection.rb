@@ -109,8 +109,15 @@ module Reactomatic
 
     def selected(monitor)
       @lock.synchronize do
-        read_nonblock if monitor.readable?
-        write_nonblock if monitor.writable?
+        begin
+          read_nonblock if monitor.readable?
+          write_nonblock if monitor.writable?
+        rescue Exception => e
+          close
+          exception_handler(e)
+          return
+        end
+
         register
       end
     end
@@ -148,6 +155,12 @@ module Reactomatic
       @write_buffer.consume(num_bytes)
       @write_count += num_bytes
       on_sent_data(num_bytes)
+    end
+
+    def exception_handler(e)
+      reactor.schedule do
+        reactor.exception_handler(e)
+      end
     end
   end
 end

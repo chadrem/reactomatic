@@ -69,6 +69,16 @@ module Reactomatic
       nil
     end
 
+    def on_exception(&block)
+      @on_exception = block
+    end
+
+    def exception_handler(e)
+      @on_exception.call(e) if @on_exception
+    rescue Exception => e2
+      puts "EXCEPTION in exception handler: #{e2.class.name}: #{e2.message}\n#{e2.backtrace.join("\n")}"
+    end
+
     private
 
     def process_next_tick_queue
@@ -85,10 +95,6 @@ module Reactomatic
       @selector.select(SELECTOR_TIMEOUT) do |monitor|
         monitor.value.call(monitor)
       end
-    end
-
-    def exception_handler(e)
-      puts "EXCEPTION #{e.class.name}: #{e.message}\n#{e.backtrace.join("\n")}"
     end
   end
 end
