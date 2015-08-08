@@ -34,6 +34,7 @@ Reactomatic creates a default reactor that should be sufficient for most applica
 - ````start````: Start the reactor and its dedicated thread.
 - ````next_tick````: Run a block of code on the reactor's thread in the future (next time it loops).
 - ````schedule````: Run a block of code on the reactor's thread immediately if called from the reactor thread.  If called from a differet thread, the block will run in the future using ````next_tick````.
+- ````on_exception````: Pass this method a block that will get executed whenever there is an exception in your callback code.  Useful for logging or printing exceptions.  The block will receive the exception as it's only parameter.
 
 ## TCP Servers
 
