@@ -11,9 +11,14 @@ module Reactomatic
       @read_finished = false
       @write_finished = false
       @lock = Monitor.new
+      @no_delay = opts.include?(:no_delay) ? opts[:no_delay] : true
 
       on_initialize
-      register if @socket
+
+      if @socket
+        @socket.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1) if @no_delay
+        register
+      end
     end
 
     #
@@ -61,10 +66,6 @@ module Reactomatic
 
     def on_initialize
       puts "initialized!"
-    end
-
-    def on_connect
-      puts "connected!"
     end
 
     def on_receive_data(data)
